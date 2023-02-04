@@ -145,6 +145,8 @@ class GlUniform
 
   GlUniform(const GlUniform&) = default;
 
+  void reset() { handle_ = kHandleInvalid; }
+
   void setValue(const T& new_value) const
   {
     const bool needs_init = handle_ == kHandleInvalid;

@@ -87,15 +87,9 @@ struct GlSlProgramImpl : public GlSlProgram {
       prog_(0),
       program_defines_(p.program_defines),
       search_path_(p.search_path),
+      source_inputs_(p.sources),
       auto_reload(p.automatically_reload)
   {
-    // Perform any code transformations we have
-    sources_ = processSources(p.sources);
-
-    if (sources_.size() == 0) {
-      PANGO_WARN("No concrete shader types found");
-    }
-
     // Actually try to compile
     if (p.link_immediately) {
       initialize();
@@ -110,6 +104,13 @@ struct GlSlProgramImpl : public GlSlProgram {
       PANGO_ENSURE(prog_ > 0);
     } else {
       clearShaders();
+    }
+
+    // Perform any code transformations we have
+    sources_ = processSources(source_inputs_);
+
+    if (sources_.size() == 0) {
+      PANGO_WARN("No concrete shader types found");
     }
 
     // compile shaders
@@ -277,6 +278,7 @@ struct GlSlProgramImpl : public GlSlProgram {
   std::vector<GLhandleARB> shaders_;
   Defines program_defines_ = {};
   PathList search_path_ = {};
+  std::vector<Source> source_inputs_;
   std::vector<Source> sources_;
   bool auto_reload = false;
 };
